@@ -1,0 +1,12 @@
+let cart = {};
+    let wishlist = [];
+    let darkMode = false;
+    let currentUser = null;
+    let appliedCoupon = null;
+    let products = [];
+    let orders = [];
+    let categories = [];
+    let validCoupons = {};
+    let currentProduct = null;
+    let selectedVariant = null;
+    let currentRating = 0;
