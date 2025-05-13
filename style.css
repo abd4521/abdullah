@@ -42,7 +42,7 @@ body.dark-mode {
 }
 
 /* Header */
-header {
+h1{
   background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
   color: white;
   text-align: center;
