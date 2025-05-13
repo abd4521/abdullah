@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /search/
+Disallow: /admin/
+Allow: /
+
+Sitemap: https://store.imabd.site/sitemap.xml
