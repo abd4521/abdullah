@@ -1,0 +1,2231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timeless Trends - Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #8a2387;
+      --secondary-color: #e94057;
+      --dark-color: #2c3e50;
+      --light-color: #f8f9fa;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+    }
+    
+    .sidebar {
+      background-color: var(--dark-color);
+      color: white;
+      height: 100vh;
+      position: fixed;
+      width: 250px;
+      transition: all 0.3s;
+    }
+    
+    .sidebar .nav-link {
+      color: rgba(255, 255, 255, 0.8);
+      padding: 12px 20px;
+      margin: 5px 0;
+      border-radius: 5px;
+    }
+    
+    .sidebar .nav-link:hover, .sidebar .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+    
+    .sidebar .nav-link i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+    
+    .main-content {
+      margin-left: 250px;
+      padding: 20px;
+      transition: all 0.3s;
+    }
+    
+    .card {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    
+    .card-header {
+      background-color: white;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      font-weight: 600;
+    }
+    
+    .stat-card {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .stat-card .value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+    
+    .stat-card .label {
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    
+    .btn-primary:hover {
+      background-color: #7a1d76;
+      border-color: #7a1d76;
+    }
+    
+    .btn-danger {
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
+    }
+    
+    .table th {
+      border-top: none;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+    
+    .badge {
+      padding: 6px 10px;
+      font-weight: 500;
+    }
+    
+    .badge-primary {
+      background-color: var(--primary-color);
+    }
+    
+    .badge-warning {
+      background-color: #ffc107;
+      color: #212529;
+    }
+    
+    .badge-success {
+      background-color: #28a745;
+    }
+    
+    .badge-danger {
+      background-color: var(--secondary-color);
+    }
+    
+    .badge-info {
+      background-color: #17a2b8;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(138, 35, 135, 0.25);
+    }
+    
+    .modal-header {
+      border-bottom: none;
+    }
+    
+    .modal-footer {
+      border-top: none;
+    }
+    
+    .order-status-select {
+      width: 150px;
+      display: inline-block;
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        margin-left: -250px;
+      }
+      .sidebar.active {
+        margin-left: 0;
+      }
+      .main-content {
+        margin-left: 0;
+      }
+      .main-content.active {
+        margin-left: 250px;
+      }
+    }
+    
+    /* Dark mode */
+    .dark-mode {
+      background-color: #1a1a1a;
+      color: #f8f9fa;
+    }
+    
+    .dark-mode .card {
+      background-color: #2c2c2c;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+    
+    .dark-mode .card-header {
+      background-color: #2c2c2c;
+      color: #f8f9fa;
+      border-bottom: 1px solid #444;
+    }
+    
+    .dark-mode .table {
+      color: #f8f9fa;
+    }
+    
+    .dark-mode .table th {
+      color: #f8f9fa;
+      background-color: #333;
+    }
+    
+    .dark-mode .table td {
+      background-color: #2c2c2c;
+      border-color: #444;
+    }
+    
+    .dark-mode .form-control, .dark-mode .form-select {
+      background-color: #333;
+      color: #f8f9fa;
+      border-color: #444;
+    }
+    
+    .dark-mode .sidebar {
+      background-color: #1a1a1a;
+    }
+  </style>
+</head>
+<body>
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="p-4">
+        <h4 class="text-center mb-4">Timeless Trends</h4>
+        <hr>
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" href="#" data-section="dashboard">
+              <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-section="products">
+              <i class="fas fa-tshirt"></i> Products
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-section="categories">
+              <i class="fas fa-tags"></i> Categories
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-section="orders">
+              <i class="fas fa-shopping-bag"></i> Orders
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-section="customers">
+              <i class="fas fa-users"></i> Customers
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-section="discounts">
+              <i class="fas fa-tags"></i> Discounts
+            </a>
+          </li>
+          <li class="nav-item mt-4">
+            <a class="nav-link" href="https://store.imabd.site/" target="_blank">
+              <i class="fas fa-external-link-alt"></i> View Store
+            </a>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" onclick="toggleDarkMode()">
+              <i class="far fa-moon"></i> Toggle Dark Mode
+            </button>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-danger" href="#" id="logoutBtn">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+      <!-- Discounts Section -->
+<div class="section-content d-none" id="discountsSection">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Discounts</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDiscountModal">
+      <i class="fas fa-plus"></i> Add Discount
+    </button>
+  </div>
+  
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover" id="discountsTable">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Type</th>
+              <th>Value</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Discounts will be loaded here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Add Discount Modal -->
+<div class="modal fade" id="addDiscountModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add New Discount</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addDiscountForm">
+          <div class="mb-3">
+            <label class="form-label">Discount Code</label>
+            <input type="text" class="form-control" id="discountCode" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Discount Type</label>
+            <select class="form-select" id="discountType" required>
+              <option value="percentage">Percentage</option>
+              <option value="fixed">Fixed Amount</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Discount Value</label>
+            <input type="number" class="form-control" id="discountValue" min="0" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Start Date</label>
+            <input type="date" class="form-control" id="discountStartDate" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">End Date</label>
+            <input type="date" class="form-control" id="discountEndDate" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="saveDiscountBtn">Save Discount</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Edit Discount Modal -->
+<div class="modal fade" id="editDiscountModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Discount</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editDiscountForm">
+          <input type="hidden" id="editDiscountId">
+          <div class="mb-3">
+            <label class="form-label">Discount Code</label>
+            <input type="text" class="form-control" id="editDiscountCode" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Discount Type</label>
+            <select class="form-select" id="editDiscountType" required>
+              <option value="percentage">Percentage</option>
+              <option value="fixed">Fixed Amount</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Discount Value</label>
+            <input type="number" class="form-control" id="editDiscountValue" min="0" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Start Date</label>
+            <input type="date" class="form-control" id="editDiscountStartDate" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">End Date</label>
+            <input type="date" class="form-control" id="editDiscountEndDate" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="updateDiscountBtn">Update Discount</button>
+      </div>
+    </div>
+  </div>
+</div>
+      <!-- Dashboard Section -->
+      <div class="section-content" id="dashboardSection">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2>Dashboard</h2>
+          <div class="d-flex align-items-center">
+            <span id="currentDate" class="me-3"></span>
+            <span id="adminGreeting"></span>
+          </div>
+        </div>
+        
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="card stat-card">
+              <div class="value" id="totalOrders">0</div>
+              <div class="label">Total Orders</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card stat-card">
+              <div class="value" id="totalRevenue">PKR 0</div>
+              <div class="label">Total Revenue</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card stat-card">
+              <div class="value" id="totalProducts">0</div>
+              <div class="label">Total Products</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card stat-card">
+              <div class="value" id="totalCustomers">0</div>
+              <div class="label">Total Customers</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Recent Orders</span>
+                <a href="#" class="btn btn-sm btn-primary" data-section="orders">View All</a>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover" id="recentOrdersTable">
+                    <thead>
+                      <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Recent orders will be loaded here -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header">
+                <span>Order Status</span>
+              </div>
+              <div class="card-body">
+                <canvas id="orderStatusChart" height="250"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Products Section -->
+      <div class="section-content d-none" id="productsSection">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2>Products</h2>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+            <i class="fas fa-plus"></i> Add Product
+          </button>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="productSearch" placeholder="Search products...">
+              </div>
+              <div class="col-md-6">
+                <select class="form-select" id="productCategoryFilter">
+                  <option value="">All Categories</option>
+                  <!-- Categories will be loaded here -->
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover" id="productsTable">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Products will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Categories Section -->
+      <div class="section-content d-none" id="categoriesSection">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2>Categories</h2>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+            <i class="fas fa-plus"></i> Add Category
+          </button>
+        </div>
+        
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover" id="categoriesTable">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Products</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Categories will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Orders Section -->
+      <div class="section-content d-none" id="ordersSection">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2>Orders</h2>
+          <div class="d-flex">
+            <select class="form-select me-2" id="orderStatusFilter">
+              <option value="">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="processing">Processing</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <input type="date" class="form-control" id="orderDateFilter">
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover" id="ordersTable">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Orders will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Customers Section -->
+      <div class="section-content d-none" id="customersSection">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2>Customers</h2>
+          <input type="text" class="form-control" id="customerSearch" placeholder="Search customers..." style="width: 300px;">
+        </div>
+        
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover" id="customersTable">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Orders</th>
+                    <th>Joined</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Customers will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Product Modal -->
+  <div class="modal fade" id="addProductModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add New Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addProductForm">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Product Name</label>
+                <input type="text" class="form-control" id="productName" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Category</label>
+                <select class="form-select" id="productCategory" required>
+                  <!-- Categories will be loaded here -->
+                </select>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Price (PKR)</label>
+                <input type="number" class="form-control" id="productPrice" min="0" step="1" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Stock Quantity</label>
+                <input type="number" class="form-control" id="productStock" min="0" step="1" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea class="form-control" id="productDescription" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Product Image URL</label>
+              <input type="url" class="form-control" id="productImage" placeholder="https://example.com/image.jpg">
+              <small class="text-muted">Or upload an image below</small>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Upload Image</label>
+              <input type="file" class="form-control" id="productImageUpload" accept="image/*">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="saveProductBtn">Save Product</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Product Modal -->
+  <div class="modal fade" id="editProductModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editProductForm">
+            <input type="hidden" id="editProductId">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Product Name</label>
+                <input type="text" class="form-control" id="editProductName" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Category</label>
+                <select class="form-select" id="editProductCategory" required>
+                  <!-- Categories will be loaded here -->
+                </select>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Price (PKR)</label>
+                <input type="number" class="form-control" id="editProductPrice" min="0" step="1" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Stock Quantity</label>
+                <input type="number" class="form-control" id="editProductStock" min="0" step="1" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea class="form-control" id="editProductDescription" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Product Image URL</label>
+              <input type="url" class="form-control" id="editProductImage" placeholder="https://example.com/image.jpg">
+              <div class="mt-2">
+                <img src="" id="editProductImagePreview" style="max-width: 200px; max-height: 200px;">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Upload New Image</label>
+              <input type="file" class="form-control" id="editProductImageUpload" accept="image/*">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="updateProductBtn">Update Product</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Category Modal -->
+  <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add New Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addCategoryForm">
+            <div class="mb-3">
+              <label class="form-label">Category Name</label>
+              <input type="text" class="form-control" id="categoryName" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="saveCategoryBtn">Save Category</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Category Modal -->
+  <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editCategoryForm">
+            <input type="hidden" id="editCategoryId">
+            <div class="mb-3">
+              <label class="form-label">Category Name</label>
+              <input type="text" class="form-control" id="editCategoryName" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="updateCategoryBtn">Update Category</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Details Modal -->
+  <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Order Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <h6>Order Information</h6>
+              <p><strong>Order ID:</strong> <span id="orderDetailId"></span></p>
+              <p><strong>Order Date:</strong> <span id="orderDetailDate"></span></p>
+              <p><strong>Status:</strong> 
+                <select class="form-select order-status-select" id="orderDetailStatus">
+                  <option value="pending">Pending</option>
+                  <option value="processing">Processing</option>
+                  <option value="shipped">Shipped</option>
+                  <option value="delivered">Delivered</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </p>
+              <p><strong>Payment Method:</strong> <span id="orderDetailPayment"></span></p>
+            </div>
+            <div class="col-md-6">
+              <h6>Customer Information</h6>
+              <p><strong>Name:</strong> <span id="orderDetailCustomerName"></span></p>
+              <p><strong>Email:</strong> <span id="orderDetailCustomerEmail"></span></p>
+              <p><strong>Phone:</strong> <span id="orderDetailCustomerPhone"></span></p>
+              <p><strong>Shipping Address:</strong> <span id="orderDetailShippingAddress"></span></p>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <h6>Order Items</h6>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody id="orderDetailItems">
+                  <!-- Order items will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <h6>Order Notes</h6>
+                  <textarea class="form-control" id="orderDetailNotes" rows="3"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <h6>Order Summary</h6>
+                  <p><strong>Subtotal:</strong> <span id="orderDetailSubtotal"></span></p>
+                  <p><strong>Shipping:</strong> <span id="orderDetailShipping"></span></p>
+                  <p><strong>Discount:</strong> <span id="orderDetailDiscount"></span></p>
+                  <p><strong>Total:</strong> <span id="orderDetailTotal"></span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="updateOrderStatusBtn">Update Status</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customer Details Modal -->
+  <div class="modal fade" id="customerDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Customer Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <h6>Customer Information</h6>
+              <p><strong>Name:</strong> <span id="customerDetailName"></span></p>
+              <p><strong>Email:</strong> <span id="customerDetailEmail"></span></p>
+              <p><strong>Phone:</strong> <span id="customerDetailPhone"></span></p>
+              <p><strong>Joined:</strong> <span id="customerDetailJoined"></span></p>
+            </div>
+            <div class="col-md-6">
+              <h6>Order Statistics</h6>
+              <p><strong>Total Orders:</strong> <span id="customerDetailTotalOrders"></span></p>
+              <p><strong>Total Spent:</strong> <span id="customerDetailTotalSpent"></span></p>
+              <p><strong>Last Order:</strong> <span id="customerDetailLastOrder"></span></p>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <h6>Recent Orders</h6>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="customerDetailOrders">
+                  <!-- Customer orders will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDjbEkfu8fJmPTDQ8xksGehPday9lrcSrg",
+      authDomain: "abdullah-bb8ab.firebaseapp.com",
+      projectId: "abdullah-bb8ab",
+      storageBucket: "abdullah-bb8ab.appspot.com",
+      messagingSenderId: "286504008164",
+      appId: "1:286504008164:web:8642bc9d56f36393052ff1"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+// Function to check if the user is an admin
+// Check if the user is an admin
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    db.collection('admins').doc(user.uid).get()
+      .then((doc) => {
+        if (doc.exists && doc.data().role === 'admin') {
+          // User is an admin, proceed to load the dashboard
+          loadDashboardData();
+          setupEventListeners();
+        } else {
+          // User is not an admin, redirect to login
+          window.location.href = 'login.html';
+        }
+      })
+      .catch((error) => {
+        console.error('Error checking admin role:', error);
+        window.location.href = 'login.html';
+      });
+  } else {
+    // No user is logged in, redirect to login
+    window.location.href = 'login.html';
+  }
+});
+    // App State
+    let currentUser = null;
+    let darkMode = false;
+    let orderStatusChart = null;
+
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check authentication state
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          currentUser = user;
+          document.getElementById('adminGreeting').textContent = `Welcome, ${user.email}`;
+          loadDashboardData();
+          setupEventListeners();
+        } else {
+          // Redirect to login if not authenticated
+          window.location.href = 'login.html';
+        }
+      });
+
+      // Set current date
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', options);
+
+      // Check for dark mode preference
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+        darkMode = true;
+      }
+    });
+
+    // Setup event listeners
+    function setupEventListeners() {
+      // Sidebar navigation
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const section = this.getAttribute('data-section');
+          showSection(section);
+        });
+      });
+
+      // Logout button
+      document.getElementById('logoutBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        auth.signOut().then(() => {
+          window.location.href = 'login.html';
+        });
+      });
+
+      // Product search
+      document.getElementById('productSearch').addEventListener('input', function() {
+        filterProducts();
+      });
+
+      // Product category filter
+      document.getElementById('productCategoryFilter').addEventListener('change', function() {
+        filterProducts();
+      });
+
+      // Order status filter
+      document.getElementById('orderStatusFilter').addEventListener('change', function() {
+        filterOrders();
+      });
+
+      // Order date filter
+      document.getElementById('orderDateFilter').addEventListener('change', function() {
+        filterOrders();
+      });
+
+      // Customer search
+      document.getElementById('customerSearch').addEventListener('input', function() {
+        filterCustomers();
+      });
+
+      // Save product button
+      document.getElementById('saveProductBtn').addEventListener('click', saveProduct);
+
+      // Update product button
+      document.getElementById('updateProductBtn').addEventListener('click', updateProduct);
+
+      // Save category button
+      document.getElementById('saveCategoryBtn').addEventListener('click', saveCategory);
+
+      // Update category button
+      document.getElementById('updateCategoryBtn').addEventListener('click', updateCategory);
+
+      // Update order status button
+      document.getElementById('updateOrderStatusBtn').addEventListener('click', updateOrderStatus);
+    }
+
+    // Show section
+    function showSection(section) {
+  // Hide all sections
+  document.querySelectorAll('.section-content').forEach(sec => {
+    sec.classList.add('d-none');
+  });
+
+  // Show selected section
+  document.getElementById(`${section}Section`).classList.remove('d-none');
+
+  // Update active nav link
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.remove('active');
+  });
+  document.querySelector(`.nav-link[data-section="${section}"]`).classList.add('active');
+
+  // Load section data
+  switch(section) {
+    case 'dashboard':
+      loadDashboardData();
+      break;
+    case 'products':
+      loadProducts();
+      break;
+    case 'categories':
+      loadCategories();
+      break;
+    case 'orders':
+      loadOrders();
+      break;
+    case 'customers':
+      loadCustomers();
+      break;
+    case 'discounts':
+      loadDiscounts();
+      break;
+  }
+}
+
+    // Toggle dark mode
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      darkMode = !darkMode;
+      localStorage.setItem('darkMode', darkMode);
+    }
+
+    // Load dashboard data
+    function loadDashboardData() {
+      // Load statistics
+      loadStatistics();
+      
+      // Load recent orders
+      loadRecentOrders();
+      
+      // Load order status chart
+      loadOrderStatusChart();
+    }
+
+    // Load statistics
+    function loadStatistics() {
+      // Total orders
+      db.collection('orders').get().then(snapshot => {
+        document.getElementById('totalOrders').textContent = snapshot.size;
+        
+        // Calculate total revenue
+        let totalRevenue = 0;
+        snapshot.forEach(doc => {
+          totalRevenue += doc.data().total;
+        });
+        document.getElementById('totalRevenue').textContent = `PKR ${totalRevenue.toLocaleString()}`;
+      });
+
+      // Total products
+      db.collection('products').get().then(snapshot => {
+        document.getElementById('totalProducts').textContent = snapshot.size;
+      });
+
+      // Total customers
+      db.collection('users').get().then(snapshot => {
+        document.getElementById('totalCustomers').textContent = snapshot.size;
+      });
+    }
+
+    // Load recent orders
+    function loadRecentOrders() {
+      const tbody = document.querySelector('#recentOrdersTable tbody');
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center">Loading orders...</td></tr>';
+      
+      db.collection('orders')
+        .orderBy('createdAt', 'desc')
+        .limit(5)
+        .get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center">No recent orders found</td></tr>';
+            return;
+          }
+          
+          tbody.innerHTML = '';
+          snapshot.forEach(doc => {
+            const order = doc.data();
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+              <td>${doc.id.substring(0, 8)}...</td>
+              <td>${order.userName || 'N/A'}</td>
+              <td>${order.createdAt?.toDate().toLocaleDateString() || 'N/A'}</td>
+              <td>PKR ${order.total.toLocaleString()}</td>
+              <td><span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></td>
+              <td>
+                <button class="btn btn-sm btn-primary" onclick="viewOrderDetails('${doc.id}')">
+                  <i class="fas fa-eye"></i> View
+                </button>
+              </td>
+            `;
+            
+            tbody.appendChild(row);
+          });
+        })
+        .catch(error => {
+          console.error('Error loading recent orders:', error);
+          tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Error loading orders</td></tr>';
+        });
+    }
+
+    // Load order status chart
+    function loadOrderStatusChart() {
+      const ctx = document.getElementById('orderStatusChart').getContext('2d');
+      
+      // Get order counts by status
+      db.collection('orders').get().then(snapshot => {
+        const statusCounts = {
+          pending: 0,
+          processing: 0,
+          shipped: 0,
+          delivered: 0,
+          cancelled: 0
+        };
+        
+        snapshot.forEach(doc => {
+          const status = doc.data().status || 'pending';
+          statusCounts[status]++;
+        });
+        
+        // Destroy previous chart if exists
+        if (orderStatusChart) {
+          orderStatusChart.destroy();
+        }
+        
+        // Create new chart
+        orderStatusChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
+            datasets: [{
+              data: [
+                statusCounts.pending,
+                statusCounts.processing,
+                statusCounts.shipped,
+                statusCounts.delivered,
+                statusCounts.cancelled
+              ],
+              backgroundColor: [
+                '#6c757d',
+                '#007bff',
+                '#ffc107',
+                '#28a745',
+                '#dc3545'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }
+        });
+      });
+    }
+
+    // Load products
+    function loadProducts() {
+  const tbody = document.querySelector('#productsTable tbody');
+  tbody.innerHTML = '<tr><td colspan="6" class="text-center">Loading products...</td></tr>';
+  
+  // First load all categories into a map for quick lookup
+  const categoriesMap = new Map();
+  db.collection('categories').get()
+    .then(categoriesSnapshot => {
+      categoriesSnapshot.forEach(catDoc => {
+        categoriesMap.set(catDoc.id, catDoc.data().name);
+      });
+      
+      // Now load products
+      return db.collection('products').get();
+    })
+    .then(snapshot => {
+      if (snapshot.empty) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center">No products found</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = '';
+      snapshot.forEach(doc => {
+        const product = doc.data();
+        const row = document.createElement('tr');
+        
+        // Get category name from map, or use 'Uncategorized' if not found
+        const categoryName = categoriesMap.get(product.category) || 'Uncategorized';
+        
+        row.innerHTML = `
+          <td><img src="${product.image || 'https://via.placeholder.com/50'}" width="50" height="50" style="object-fit: cover;"></td>
+          <td>${product.name}</td>
+          <td>${categoryName}</td>
+          <td>PKR ${product.price?.toLocaleString() || '0'}</td>
+          <td>${product.stock || '0'}</td>
+          <td>
+            <button class="btn btn-sm btn-primary me-1" onclick="editProduct('${doc.id}')">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="deleteProduct('${doc.id}', '${product.name}')">
+              <i class="fas fa-trash"></i> Delete
+            </button>
+          </td>
+        `;
+        
+        tbody.appendChild(row);
+      });
+    })
+    .catch(error => {
+      console.error('Error loading products:', error);
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Error loading products</td></tr>';
+    });
+}
+
+    // Load categories
+    function loadCategories() {
+      const tbody = document.querySelector('#categoriesTable tbody');
+      tbody.innerHTML = '<tr><td colspan="3" class="text-center">Loading categories...</td></tr>';
+      
+      db.collection('categories').get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            tbody.innerHTML = '<tr><td colspan="3" class="text-center">No categories found</td></tr>';
+            return;
+          }
+          
+          tbody.innerHTML = '';
+          snapshot.forEach(doc => {
+            const category = doc.data();
+            const row = document.createElement('tr');
+            
+            // Count products in this category
+            db.collection('products').where('category', '==', category.name).get()
+              .then(productSnapshot => {
+                row.innerHTML = `
+                  <td>${category.name}</td>
+                  <td>${productSnapshot.size}</td>
+                  <td>
+                    <button class="btn btn-sm btn-primary me-1" onclick="editCategory('${doc.id}', '${category.name}')">
+                      <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteCategory('${doc.id}', '${category.name}')">
+                      <i class="fas fa-trash"></i> Delete
+                    </button>
+                  </td>
+                `;
+                
+                tbody.appendChild(row);
+              });
+          });
+        })
+        .catch(error => {
+          console.error('Error loading categories:', error);
+          tbody.innerHTML = '<tr><td colspan="3" class="text-center text-danger">Error loading categories</td></tr>';
+        });
+    }
+
+    // Load orders
+    function loadOrders() {
+      const tbody = document.querySelector('#ordersTable tbody');
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center">Loading orders...</td></tr>';
+      
+      db.collection('orders').orderBy('createdAt', 'desc').get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center">No orders found</td></tr>';
+            return;
+          }
+          
+          tbody.innerHTML = '';
+          snapshot.forEach(doc => {
+            const order = doc.data();
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+              <td>${doc.id.substring(0, 8)}...</td>
+              <td>${order.userName || 'N/A'}</td>
+              <td>${order.createdAt?.toDate().toLocaleDateString() || 'N/A'}</td>
+              <td>PKR ${order.total.toLocaleString()}</td>
+              <td><span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></td>
+              <td>
+                <button class="btn btn-sm btn-primary" onclick="viewOrderDetails('${doc.id}')">
+                  <i class="fas fa-eye"></i> View
+                </button>
+              </td>
+            `;
+            
+            tbody.appendChild(row);
+          });
+        })
+        .catch(error => {
+          console.error('Error loading orders:', error);
+          tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Error loading orders</td></tr>';
+        });
+    }
+
+    // Load customers
+    function loadCustomers() {
+      const tbody = document.querySelector('#customersTable tbody');
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center">Loading customers...</td></tr>';
+      
+      db.collection('users').get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center">No customers found</td></tr>';
+            return;
+          }
+          
+          tbody.innerHTML = '';
+          snapshot.forEach(doc => {
+            const user = doc.data();
+            const row = document.createElement('tr');
+            
+            // Count orders for this customer
+            db.collection('orders').where('userId', '==', doc.id).get()
+              .then(orderSnapshot => {
+                row.innerHTML = `
+                  <td>${user.displayName || user.email.split('@')[0]}</td>
+                  <td>${user.email}</td>
+                  <td>${user.phone || 'N/A'}</td>
+                  <td>${orderSnapshot.size}</td>
+                  <td>${user.createdAt?.toDate().toLocaleDateString() || 'N/A'}</td>
+                  <td>
+                    <button class="btn btn-sm btn-primary" onclick="viewCustomerDetails('${doc.id}')">
+                      <i class="fas fa-eye"></i> View
+                    </button>
+                  </td>
+                `;
+                
+                tbody.appendChild(row);
+              });
+          });
+        })
+        .catch(error => {
+          console.error('Error loading customers:', error);
+          tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Error loading customers</td></tr>';
+        });
+    }
+
+    // Load categories for product filter dropdown
+    function loadCategoriesForFilter() {
+      const categoryFilter = document.getElementById('productCategoryFilter');
+      const productCategory = document.getElementById('productCategory');
+      const editProductCategory = document.getElementById('editProductCategory');
+      
+      // Clear existing options except the first one
+      while (categoryFilter.options.length > 1) {
+        categoryFilter.remove(1);
+      }
+      while (productCategory.options.length > 0) {
+        productCategory.remove(0);
+      }
+      while (editProductCategory.options.length > 0) {
+        editProductCategory.remove(0);
+      }
+      
+      // Add default option
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = 'Select Category';
+      productCategory.appendChild(defaultOption.cloneNode(true));
+      editProductCategory.appendChild(defaultOption.cloneNode(true));
+      
+      // Load categories from Firestore
+      db.collection('categories').get()
+        .then(snapshot => {
+          snapshot.forEach(doc => {
+            const category = doc.data();
+            
+            // Add to filter dropdown
+            const filterOption = document.createElement('option');
+            filterOption.value = category.name;
+            filterOption.textContent = category.name;
+            categoryFilter.appendChild(filterOption);
+            
+            // Add to product form dropdowns
+            const formOption = filterOption.cloneNode(true);
+            productCategory.appendChild(formOption);
+            
+            const editFormOption = filterOption.cloneNode(true);
+            editProductCategory.appendChild(editFormOption);
+          });
+        })
+        .catch(error => {
+          console.error('Error loading categories:', error);
+        });
+    }
+
+    // Filter products
+    function filterProducts() {
+      const searchTerm = document.getElementById('productSearch').value.toLowerCase();
+      const categoryFilter = document.getElementById('productCategoryFilter').value;
+      
+      const rows = document.querySelectorAll('#productsTable tbody tr');
+      rows.forEach(row => {
+        const name = row.cells[1].textContent.toLowerCase();
+        const category = row.cells[2].textContent;
+        
+        const nameMatch = name.includes(searchTerm);
+        const categoryMatch = categoryFilter === '' || category === categoryFilter;
+        
+        row.style.display = nameMatch && categoryMatch ? '' : 'none';
+      });
+    }
+
+    // Filter orders
+    function filterOrders() {
+      const statusFilter = document.getElementById('orderStatusFilter').value;
+      const dateFilter = document.getElementById('orderDateFilter').value;
+      
+      const rows = document.querySelectorAll('#ordersTable tbody tr');
+      rows.forEach(row => {
+        const status = row.cells[4].textContent.trim();
+        const date = row.cells[2].textContent;
+        
+        const statusMatch = statusFilter === '' || status.toLowerCase() === statusFilter.toLowerCase();
+        const dateMatch = dateFilter === '' || date.includes(dateFilter);
+        
+        row.style.display = statusMatch && dateMatch ? '' : 'none';
+      });
+    }
+
+    // Filter customers
+    function filterCustomers() {
+      const searchTerm = document.getElementById('customerSearch').value.toLowerCase();
+      
+      const rows = document.querySelectorAll('#customersTable tbody tr');
+      rows.forEach(row => {
+        const name = row.cells[0].textContent.toLowerCase();
+        const email = row.cells[1].textContent.toLowerCase();
+        
+        const nameMatch = name.includes(searchTerm);
+        const emailMatch = email.includes(searchTerm);
+        
+        row.style.display = nameMatch || emailMatch ? '' : 'none';
+      });
+    }
+
+    // Save product
+    async function saveProduct() {
+      try {
+        const originalHTML = showLoading(saveProductBtn);
+        
+        const productData = {
+          name: productName.value,
+          sku: productSKU.value,
+          price: parseFloat(productPrice.value),
+          comparePrice: parseFloat(productComparePrice.value) || 0,
+          stock: parseInt(productStock.value),
+          category: productCategory.value,
+          image: productImage.value,
+          additionalImages: productAdditionalImages.value.split(',').map(url => url.trim()).filter(url => url),
+          description: productDescription.value,
+          variants: getVariantsData(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        if (productId.value) {
+          // Update existing product
+          await db.collection('products').doc(productId.value).update(productData);
+        } else {
+          // Add new product
+          productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          productData.sold = 0;
+          await db.collection('products').add(productData);
+        }
+
+        hideLoading(saveProductBtn, originalHTML);
+        hideModal(productModal);
+        loadProducts();
+      } catch (error) {
+        console.error('Error saving product:', error);
+        hideLoading(saveProductBtn, originalHTML);
+        alert('Failed to save product. Please try again.');
+      }
+    }// Load discounts
+function loadDiscounts() {
+  const tbody = document.querySelector('#discountsTable tbody');
+  tbody.innerHTML = '<tr><td colspan="7" class="text-center">Loading discounts...</td></tr>';
+  
+  db.collection('discounts').get()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center">No discounts found</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = '';
+      snapshot.forEach(doc => {
+        const discount = doc.data();
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+          <td>${discount.code}</td>
+          <td>${discount.type}</td>
+          <td>${discount.value} ${discount.type === 'percentage' ? '%' : 'PKR'}</td>
+          <td>${discount.startDate}</td>
+          <td>${discount.endDate}</td>
+          <td><span class="badge ${getDiscountStatusClass(discount.startDate, discount.endDate)}">
+            ${getDiscountStatus(discount.startDate, discount.endDate)}
+          </span></td>
+          <td>
+            <button class="btn btn-sm btn-primary me-1" onclick="editDiscount('${doc.id}')">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="deleteDiscount('${doc.id}', '${discount.code}')">
+              <i class="fas fa-trash"></i> Delete
+            </button>
+          </td>
+        `;
+        
+        tbody.appendChild(row);
+      });
+    })
+    .catch(error => {
+      console.error('Error loading discounts:', error);
+      tbody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Error loading discounts</td></tr>';
+    });
+}
+
+// Save discount
+function saveDiscount() {
+  const code = document.getElementById('discountCode').value.trim();
+  const type = document.getElementById('discountType').value;
+  const value = parseFloat(document.getElementById('discountValue').value);
+  const startDate = document.getElementById('discountStartDate').value;
+  const endDate = document.getElementById('discountEndDate').value;
+  
+  if (!code || !type || isNaN(value) || !startDate || !endDate) {
+    alert('Please fill all required fields');
+    return;
+  }
+  
+  const btn = document.getElementById('saveDiscountBtn');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+  btn.disabled = true;
+  
+  db.collection('discounts').add({
+    code,
+    type,
+    value,
+    startDate,
+    endDate,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(() => {
+    alert('Discount added successfully');
+    $('#addDiscountModal').modal('hide');
+    document.getElementById('addDiscountForm').reset();
+    loadDiscounts();
+  })
+  .catch(error => {
+    console.error('Error adding discount:', error);
+    alert('Error adding discount');
+  })
+  .finally(() => {
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  });
+}
+
+// Edit discount
+function editDiscount(discountId) {
+  db.collection('discounts').doc(discountId).get()
+    .then(doc => {
+      if (!doc.exists) {
+        alert('Discount not found');
+        return;
+      }
+      
+      const discount = doc.data();
+      document.getElementById('editDiscountId').value = discountId;
+      document.getElementById('editDiscountCode').value = discount.code;
+      document.getElementById('editDiscountType').value = discount.type;
+      document.getElementById('editDiscountValue').value = discount.value;
+      document.getElementById('editDiscountStartDate').value = discount.startDate;
+      document.getElementById('editDiscountEndDate').value = discount.endDate;
+      
+      $('#editDiscountModal').modal('show');
+    })
+    .catch(error => {
+      console.error('Error loading discount:', error);
+      alert('Error loading discount details');
+    });
+}
+
+// Update discount
+function updateDiscount() {
+  const discountId = document.getElementById('editDiscountId').value;
+  const code = document.getElementById('editDiscountCode').value.trim();
+  const type = document.getElementById('editDiscountType').value;
+  const value = parseFloat(document.getElementById('editDiscountValue').value);
+  const startDate = document.getElementById('editDiscountStartDate').value;
+  const endDate = document.getElementById('editDiscountEndDate').value;
+  
+  if (!discountId || !code || !type || isNaN(value) || !startDate || !endDate) {
+    alert('Please fill all required fields');
+    return;
+  }
+  
+  const btn = document.getElementById('updateDiscountBtn');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
+  btn.disabled = true;
+  
+  db.collection('discounts').doc(discountId).update({
+    code,
+    type,
+    value,
+    startDate,
+    endDate,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(() => {
+    alert('Discount updated successfully');
+    $('#editDiscountModal').modal('hide');
+    loadDiscounts();
+  })
+  .catch(error => {
+    console.error('Error updating discount:', error);
+    alert('Error updating discount');
+  })
+  .finally(() => {
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  });
+}
+
+// Delete discount
+function deleteDiscount(discountId, discountCode) {
+  if (!confirm(`Are you sure you want to delete "${discountCode}"?`)) {
+    return;
+  }
+  
+  db.collection('discounts').doc(discountId).delete()
+    .then(() => {
+      alert('Discount deleted successfully');
+      loadDiscounts();
+    })
+    .catch(error => {
+      console.error('Error deleting discount:', error);
+      alert('Error deleting discount');
+    });
+}
+
+// Helper function to get discount status
+function getDiscountStatus(startDate, endDate) {
+  const now = new Date();
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  
+  if (now < start) return 'Upcoming';
+  if (now > end) return 'Expired';
+  return 'Active';
+}
+// Save discount button
+document.getElementById('saveDiscountBtn').addEventListener('click', saveDiscount);
+
+// Update discount button
+document.getElementById('updateDiscountBtn').addEventListener('click', updateDiscount);
+// Helper function to get discount status badge class
+function getDiscountStatusClass(startDate, endDate) {
+  const status = getDiscountStatus(startDate, endDate);
+  switch(status) {
+    case 'Upcoming': return 'bg-info';
+    case 'Active': return 'bg-success';
+    case 'Expired': return 'bg-danger';
+    default: return 'bg-secondary';
+  }
+}
+    
+    function saveProductToFirestore(productData, btn, originalText) {
+      db.collection('products').add(productData)
+        .then(() => {
+          alert('Product added successfully');
+          $('#addProductModal').modal('hide');
+          document.getElementById('addProductForm').reset();
+          loadProducts();
+          loadCategories();
+        })
+        .catch(error => {
+          console.error('Error adding product:', error);
+          alert('Error adding product');
+        })
+        .finally(() => {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        });
+    }
+
+    // Edit product
+    function editProduct(productId) {
+  // First load all categories
+  db.collection('categories').get()
+    .then(categoriesSnapshot => {
+      const categorySelect = document.getElementById('editProductCategory');
+      categorySelect.innerHTML = ''; // Clear existing options
+      
+      // Add default option
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = 'Select Category';
+      categorySelect.appendChild(defaultOption);
+      
+      // Add all categories to dropdown
+      categoriesSnapshot.forEach(catDoc => {
+        const option = document.createElement('option');
+        option.value = catDoc.id; // Store document ID as value
+        option.textContent = catDoc.data().name;
+        categorySelect.appendChild(option);
+      });
+      
+      // Now load the product
+      return db.collection('products').doc(productId).get();
+    })
+    .then(doc => {
+      if (!doc.exists) {
+        alert('Product not found');
+        return;
+      }
+      
+      const product = doc.data();
+      document.getElementById('editProductId').value = productId;
+      document.getElementById('editProductName').value = product.name;
+      document.getElementById('editProductPrice').value = product.price;
+      document.getElementById('editProductStock').value = product.stock;
+      document.getElementById('editProductDescription').value = product.description || '';
+      document.getElementById('editProductImage').value = product.image || '';
+      document.getElementById('editProductImagePreview').src = product.image || 'https://via.placeholder.com/300';
+      
+      // Set the selected category
+      const categorySelect = document.getElementById('editProductCategory');
+      if (product.category) {
+        // Find the option with matching value (category ID)
+        for (let i = 0; i < categorySelect.options.length; i++) {
+          if (categorySelect.options[i].value === product.category) {
+            categorySelect.selectedIndex = i;
+            break;
+          }
+        }
+      }
+      
+      $('#editProductModal').modal('show');
+    })
+    .catch(error => {
+      console.error('Error loading product:', error);
+      alert('Error loading product details');
+    });
+}
+    // Update product
+    function updateProduct() {
+      const productId = document.getElementById('editProductId').value;
+      const name = document.getElementById('editProductName').value.trim();
+      const category = document.getElementById('editProductCategory').value;
+      const price = parseFloat(document.getElementById('editProductPrice').value);
+      const stock = parseInt(document.getElementById('editProductStock').value);
+      const description = document.getElementById('editProductDescription').value.trim();
+      const imageUrl = document.getElementById('editProductImage').value.trim();
+      const imageFile = document.getElementById('editProductImageUpload').files[0];
+      const categoryId = document.getElementById('editProductCategory').value;
+      
+      if (!productId || !name || !category || isNaN(price) || isNaN(stock)) {
+        alert('Please fill all required fields');
+        return;
+      }
+      
+      const btn = document.getElementById('updateProductBtn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
+      btn.disabled = true;
+      
+      const productData = {
+        name,
+        category,
+        price,
+        stock,
+        description: description || '',
+        image: imageUrl || 'https://via.placeholder.com/300',
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        category: categoryId 
+      };
+      
+      // If new image file is uploaded, upload to Firebase Storage first
+      if (imageFile) {
+        const storageRef = storage.ref(`products/${Date.now()}_${imageFile.name}`);
+        const uploadTask = storageRef.put(imageFile);
+        
+        uploadTask.on('state_changed', 
+          null,
+          error => {
+            console.error('Error uploading image:', error);
+            alert('Error uploading image. Product will be updated with existing image.');
+            updateProductInFirestore(productId, productData, btn, originalText);
+          },
+          () => {
+            // Upload complete, get download URL
+            uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+              productData.image = downloadURL;
+              updateProductInFirestore(productId, productData, btn, originalText);
+            });
+          }
+        );
+      } else {
+        updateProductInFirestore(productId, productData, btn, originalText);
+      }
+      
+    }
+    
+    function updateProductInFirestore(productId, productData, btn, originalText) {
+      db.collection('products').doc(productId).update(productData)
+        .then(() => {
+          alert('Product updated successfully');
+          $('#editProductModal').modal('hide');
+          loadProducts();
+          loadCategories(); // Refresh the category list with updated counts
+
+        })
+        .catch(error => {
+          console.error('Error updating product:', error);
+          alert('Error updating product');
+        })
+        .finally(() => {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        });
+    }
+
+    // Delete product
+    function deleteProduct(productId, productName) {
+      if (!confirm(`Are you sure you want to delete "${productName}"?`)) {
+        return;
+      }
+      
+      db.collection('products').doc(productId).delete()
+        .then(() => {
+          alert('Product deleted successfully');
+          loadProducts();
+        })
+        .catch(error => {
+          console.error('Error deleting product:', error);
+          alert('Error deleting product');
+        });
+    }
+
+    // Save category
+    function saveCategory() {
+      const name = document.getElementById('categoryName').value.trim();
+      
+      if (!name) {
+        alert('Please enter category name');
+        return;
+      }
+      
+      const btn = document.getElementById('saveCategoryBtn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+      btn.disabled = true;
+      
+      db.collection('categories').add({
+        name,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+        alert('Category added successfully');
+        $('#addCategoryModal').modal('hide');
+        document.getElementById('addCategoryForm').reset();
+        loadCategories();
+        loadCategoriesForFilter();
+      })
+      .catch(error => {
+        console.error('Error adding category:', error);
+        alert('Error adding category');
+      })
+      .finally(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      });
+    }
+
+    // Edit category
+    function editCategory(categoryId, categoryName) {
+      document.getElementById('editCategoryId').value = categoryId;
+      document.getElementById('editCategoryName').value = categoryName;
+      $('#editCategoryModal').modal('show');
+    }
+
+    // Update category
+    function updateCategory() {
+      const categoryId = document.getElementById('editCategoryId').value;
+      const name = document.getElementById('editCategoryName').value.trim();
+      
+      if (!categoryId || !name) {
+        alert('Please enter category name');
+        return;
+      }
+      
+      const btn = document.getElementById('updateCategoryBtn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
+      btn.disabled = true;
+      
+      db.collection('categories').doc(categoryId).update({
+        name,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+        // Update all products with this category
+        db.collection('products').where('category', '==', document.getElementById('editCategoryName').defaultValue).get()
+          .then(snapshot => {
+            const batch = db.batch();
+            snapshot.forEach(doc => {
+              batch.update(doc.ref, { category: name });
+            });
+            return batch.commit();
+          })
+          .then(() => {
+            alert('Category updated successfully');
+            $('#editCategoryModal').modal('hide');
+            loadCategories();
+            loadCategoriesForFilter();
+            loadProducts();
+          });
+      })
+      .catch(error => {
+        console.error('Error updating category:', error);
+        alert('Error updating category');
+      })
+      .finally(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      });
+    }
+
+    // Delete category
+    function deleteCategory(categoryId, categoryName) {
+      if (!confirm(`Are you sure you want to delete "${categoryName}"? This will remove the category from all products.`)) {
+        return;
+      }
+      
+      // First check if any products use this category
+      db.collection('products').where('category', '==', categoryName).get()
+        .then(snapshot => {
+          if (!snapshot.empty) {
+            return confirm(`There are ${snapshot.size} products with this category. Do you want to proceed with deletion?`);
+          }
+          return true;
+        })
+        .then(confirmed => {
+          if (!confirmed) return;
+          
+          // Delete the category
+          return db.collection('categories').doc(categoryId).delete();
+        })
+        .then(() => {
+          alert('Category deleted successfully');
+          loadCategories();
+          loadCategoriesForFilter();
+        })
+        .catch(error => {
+          console.error('Error deleting category:', error);
+          alert('Error deleting category');
+        });
+    }
+
+    // View order details
+    function viewOrderDetails(orderId) {
+      db.collection('orders').doc(orderId).get()
+        .then(doc => {
+          if (!doc.exists) {
+            alert('Order not found');
+            return;
+          }
+          
+          const order = doc.data();
+          
+          // Set order information
+          document.getElementById('orderDetailId').textContent = orderId;
+          document.getElementById('orderDetailDate').textContent = order.createdAt?.toDate().toLocaleString() || 'N/A';
+          document.getElementById('orderDetailStatus').value = order.status;
+          document.getElementById('orderDetailPayment').textContent = order.paymentMethod.replace(/([A-Z])/g, ' $1').trim();
+          document.getElementById('orderDetailNotes').value = order.notes || '';
+          
+          // Set customer information
+          document.getElementById('orderDetailCustomerName').textContent = order.userName;
+          document.getElementById('orderDetailCustomerEmail').textContent = order.userEmail;
+          document.getElementById('orderDetailCustomerPhone').textContent = order.userContact;
+          document.getElementById('orderDetailShippingAddress').textContent = 
+            `${order.shippingAddress?.address}, ${order.shippingAddress?.city}, ${order.shippingAddress?.province}`;
+          
+          // Set order items
+          const itemsTbody = document.getElementById('orderDetailItems');
+          itemsTbody.innerHTML = '';
+          
+          let subtotal = 0;
+          Object.values(order.products).forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${item.name}</td>
+              <td>PKR ${item.price.toLocaleString()}</td>
+              <td>${item.quantity}</td>
+              <td>PKR ${(item.price * item.quantity).toLocaleString()}</td>
+            `;
+            itemsTbody.appendChild(row);
+            subtotal += item.price * item.quantity;
+          });
+          
+          // Set order summary
+          document.getElementById('orderDetailSubtotal').textContent = `PKR ${subtotal.toLocaleString()}`;
+          document.getElementById('orderDetailShipping').textContent = `PKR ${order.shippingFee?.toLocaleString() || '0'}`;
+          
+          if (order.discount) {
+            document.getElementById('orderDetailDiscount').textContent = 
+              `PKR ${order.discount.amount.toLocaleString()} (${order.discount.code})`;
+          } else {
+            document.getElementById('orderDetailDiscount').textContent = 'PKR 0';
+          }
+          
+          document.getElementById('orderDetailTotal').textContent = `PKR ${order.total.toLocaleString()}`;
+          
+          $('#orderDetailsModal').modal('show');
+        })
+        .catch(error => {
+          console.error('Error loading order:', error);
+          alert('Error loading order details');
+        });
+    }
+
+    // Update order status
+    function updateOrderStatus() {
+      const orderId = document.getElementById('orderDetailId').textContent;
+      const status = document.getElementById('orderDetailStatus').value;
+      const notes = document.getElementById('orderDetailNotes').value.trim();
+      
+      if (!orderId || !status) {
+        alert('Please select a status');
+        return;
+      }
+      
+      const btn = document.getElementById('updateOrderStatusBtn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
+      btn.disabled = true;
+      
+      const updateData = {
+        status,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      
+      if (notes) {
+        updateData.notes = notes;
+      }
+      
+      // Set status timestamp based on the new status
+      switch(status) {
+        case 'processing':
+          updateData.processedAt = firebase.firestore.FieldValue.serverTimestamp();
+          break;
+        case 'shipped':
+          updateData.shippedAt = firebase.firestore.FieldValue.serverTimestamp();
+          break;
+        case 'delivered':
+          updateData.deliveredAt = firebase.firestore.FieldValue.serverTimestamp();
+          break;
+      }
+      
+      db.collection('orders').doc(orderId).update(updateData)
+        .then(() => {
+          alert('Order status updated successfully');
+          $('#orderDetailsModal').modal('hide');
+          loadDashboardData();
+          loadOrders();
+        })
+        .catch(error => {
+          console.error('Error updating order status:', error);
+          alert('Error updating order status');
+        })
+        .finally(() => {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        });
+    }
+
+    // View customer details
+    function viewCustomerDetails(customerId) {
+      db.collection('users').doc(customerId).get()
+        .then(doc => {
+          if (!doc.exists) {
+            alert('Customer not found');
+            return;
+          }
+          
+          const user = doc.data();
+          
+          // Set customer information
+          document.getElementById('customerDetailName').textContent = user.displayName || user.email.split('@')[0];
+          document.getElementById('customerDetailEmail').textContent = user.email;
+          document.getElementById('customerDetailPhone').textContent = user.phone || 'N/A';
+          document.getElementById('customerDetailJoined').textContent = user.createdAt?.toDate().toLocaleDateString() || 'N/A';
+          
+          // Get customer orders
+          return db.collection('orders')
+            .where('userId', '==', customerId)
+            .orderBy('createdAt', 'desc')
+            .get();
+        })
+        .then(snapshot => {
+          // Set order statistics
+          document.getElementById('customerDetailTotalOrders').textContent = snapshot.size;
+          
+          let totalSpent = 0;
+          let lastOrder = null;
+          snapshot.forEach(doc => {
+            totalSpent += doc.data().total;
+            if (!lastOrder || doc.data().createdAt > lastOrder.createdAt) {
+              lastOrder = doc.data();
+            }
+          });
+          
+          document.getElementById('customerDetailTotalSpent').textContent = `PKR ${totalSpent.toLocaleString()}`;
+          document.getElementById('customerDetailLastOrder').textContent = 
+            lastOrder ? lastOrder.createdAt?.toDate().toLocaleDateString() : 'N/A';
+          
+          // Set recent orders
+          const ordersTbody = document.getElementById('customerDetailOrders');
+          ordersTbody.innerHTML = '';
+          
+          snapshot.forEach(doc => {
+            const order = doc.data();
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${doc.id.substring(0, 8)}...</td>
+              <td>${order.createdAt?.toDate().toLocaleDateString() || 'N/A'}</td>
+              <td>PKR ${order.total.toLocaleString()}</td>
+              <td><span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></td>
+            `;
+            ordersTbody.appendChild(row);
+          });
+          
+          $('#customerDetailsModal').modal('show');
+        })
+        .catch(error => {
+          console.error('Error loading customer:', error);
+          alert('Error loading customer details');
+        });
+    }
+
+    // Helper function to get status badge class
+    function getStatusBadgeClass(status) {
+      switch(status.toLowerCase()) {
+        case 'pending': return 'bg-secondary';
+        case 'processing': return 'bg-primary';
+        case 'shipped': return 'bg-warning text-dark';
+        case 'delivered': return 'bg-success';
+        case 'cancelled': return 'bg-danger';
+        default: return 'bg-info';
+      }
+    }
+  </script>
+</body>
+</html>
